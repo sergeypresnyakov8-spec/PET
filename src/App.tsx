@@ -224,8 +224,17 @@ export default function App() {
   // Fetch options on load
   useEffect(() => {
     if (!GAS_WEB_APP_URL) return;
-    fetch(`${GAS_WEB_APP_URL}?action=getOptions`)
-      .then(res => res.json())
+    
+    // Google Apps Script requires following redirects
+    fetch(`${GAS_WEB_APP_URL}?action=getOptions`, {
+      redirect: 'follow'
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then(data => {
         let currentThickOpts = [12, 15, 19, 23, 33, 50, 75, 100];
         
@@ -282,6 +291,7 @@ export default function App() {
     try {
       const response = await fetch(GAS_WEB_APP_URL, {
         method: 'POST',
+        redirect: 'follow',
         body: JSON.stringify(currentInputs),
         headers: { 'Content-Type': 'text/plain;charset=utf-8' } // GAS requires text/plain for CORS
       });
