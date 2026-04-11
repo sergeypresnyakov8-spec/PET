@@ -369,7 +369,7 @@ export default function App() {
       <aside className="w-full md:w-[380px] lg:w-[420px] xl:w-[460px] bg-white border-r border-slate-200 flex flex-col h-screen sticky top-0 overflow-y-auto shadow-sm z-10">
         <div className="p-6 border-b border-slate-200 bg-white text-slate-900">
           <div className="flex items-center gap-3 mb-2">
-            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Логотип" className="h-16 w-auto object-contain" />
+            <img src="/PET/logo.png" alt="Логотип" className="h-16 w-auto object-contain" />
             <h1 className="text-xl font-bold flex items-center gap-2">
               Калькулятор ПЭТ
             </h1>
