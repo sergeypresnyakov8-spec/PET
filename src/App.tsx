@@ -197,14 +197,14 @@ const Toggle = ({ label, checked, onChange }: any) => (
 
 export default function App() {
   const [inputs, setInputs] = useState<Inputs>({
-    basePetType: 'Основа ПЭТ (Прозр.)',
+    basePetType: 'Основа ПЭТ (Прозрачный)',
     customPetPrice: 0,
-    orderVolume: 40000,
+    orderVolume: 50000,
     baseWidth: 1200,
-    baseThickness: 50,
+    baseThickness: 12,
     numberOfPasses: 1,
-    slitter1: false,
-    slitter2: false,
+    slitter1: true,
+    slitter2: true,
     ecoFee: true,
     transportCost: 0,
     machineSpeed: 100,
@@ -213,7 +213,7 @@ export default function App() {
     marginPct: 0
   });
 
-  const [options, setOptions] = useState<string[]>(["Основа ПЭТ (Прозр.)", "Основа ПЭТ (Метализ.)", "Основа ПЭТ (своя цена)"]);
+  const [options, setOptions] = useState<string[]>(["Основа ПЭТ (Прозрачный)", "Основа ПЭТ (Метализированный)", "Основа ПЭТ (своя цена)"]);
   const [thicknessOptions, setThicknessOptions] = useState<number[]>([12, 15, 19, 23, 33, 50, 75, 100]);
   const [result, setResult] = useState<CalculationResult | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
