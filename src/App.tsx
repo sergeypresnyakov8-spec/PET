@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Calculator, Settings, Package, Ruler, Weight, 
-  Percent, Truck, Zap, RefreshCw, 
+  DollarSign, Percent, Truck, Zap, RefreshCw, 
   ChevronDown, Info, Activity, FileSpreadsheet, Layers
 } from 'lucide-react';
 
@@ -412,6 +412,7 @@ export default function App() {
                     value={inputs.customPetPrice} 
                     onChange={(v: number) => handleInputChange('customPetPrice', v)} 
                     suffix="₽/кг" 
+                    icon={DollarSign} 
                   />
                 </div>
               )}
@@ -496,6 +497,7 @@ export default function App() {
           {/* Financials */}
           <section className="space-y-4">
             <h2 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2 flex items-center gap-2">
+              <DollarSign size={16} className="text-blue-600" />
               Финансы
             </h2>
             <div className="space-y-4">
@@ -580,6 +582,7 @@ export default function App() {
               </div>
 
               <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-10"><DollarSign size={64} /></div>
                 <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Плановая себестоимость (Итого)</h3>
                 <div className="text-3xl font-bold text-slate-900 mt-auto">
                   {result ? formatCurrency(result.totals.planned.order) : '---'}
@@ -607,6 +610,7 @@ export default function App() {
             <div className="bg-emerald-50 rounded-xl shadow-sm border border-emerald-200 overflow-hidden">
               <div className="px-6 py-4 border-b border-emerald-200 bg-emerald-100/50 flex justify-between items-center">
                 <h3 className="text-lg font-bold text-emerald-900 flex items-center gap-2">
+                  <DollarSign className="text-emerald-600" size={20} />
                   Коммерческое предложение (с учетом маржи {inputs.marginPct}%)
                 </h3>
               </div>
