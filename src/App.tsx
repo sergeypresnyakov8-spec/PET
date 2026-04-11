@@ -7,7 +7,7 @@ import {
 
 // --- CONFIGURATION ---
 // Paste your deployed Google Apps Script Web App URL here.
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwNvFDGS1tg4GCUtNHn7lb0X1Cs29L5C3XZVk1QoeRLI79Yp3HgZuFIeJOnQ7VV0q0/exec"; 
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzbBfM1yj4nzxqN0T42I9-iweMFtA2tBDeqedqCiBF8eCs_-jxfOccRUwQGWOcy01MI/exec"; 
 
 interface Inputs {
   basePetType: string;
@@ -46,6 +46,9 @@ interface CalculationResult {
     length: number;
     m2Weight: number;
     m2PerKg: number;
+    totalTimeHours?: number;
+    setupTimeHours?: number;
+    powerConsumption?: number;
   };
 }
 
@@ -74,6 +77,12 @@ const calculateMockData = (inputs: Inputs): CalculationResult => {
   const weight = (inputs.orderVolume * inputs.baseThickness * 1.4) / 1000; 
   const orderCost = weight * basePricePerKg * (1 + inputs.marginPct / 100) + inputs.transportCost;
   
+  const length = (inputs.orderVolume / (inputs.baseWidth / 1000));
+  const baseTimeHours = inputs.machineSpeed > 0 ? (length * inputs.numberOfPasses) / inputs.machineSpeed / 60 : 0;
+  const setupTimeHours = baseTimeHours * (inputs.setupPct / 100);
+  const totalTimeHours = baseTimeHours + setupTimeHours;
+  const powerConsumption = totalTimeHours * 217; // 217 kW is the machine power from the spreadsheet
+
   return {
     totals: {
       planned: {
@@ -89,9 +98,12 @@ const calculateMockData = (inputs: Inputs): CalculationResult => {
     },
     techStats: {
       weight: weight,
-      length: (inputs.orderVolume / (inputs.baseWidth / 1000)),
+      length: length,
       m2Weight: (weight / inputs.orderVolume) * 1000,
-      m2PerKg: inputs.orderVolume / weight
+      m2PerKg: inputs.orderVolume / weight,
+      totalTimeHours,
+      setupTimeHours,
+      powerConsumption
     },
     breakdown: [
       { expense: "Основа ПЭТ", orderCost: orderCost * 0.78, costPerM2: (orderCost * 0.78)/inputs.orderVolume, costPerKg: basePricePerKg, pct: 0.782 },
@@ -345,7 +357,10 @@ export default function App() {
             weight: parseNumberSafe(data.techStats?.weight),
             length: parseNumberSafe(data.techStats?.length),
             m2Weight: parseNumberSafe(data.techStats?.m2Weight),
-            m2PerKg: parseNumberSafe(data.techStats?.m2PerKg)
+            m2PerKg: parseNumberSafe(data.techStats?.m2PerKg),
+            totalTimeHours: parseNumberSafe(data.techStats?.totalTimeHours),
+            setupTimeHours: parseNumberSafe(data.techStats?.setupTimeHours),
+            powerConsumption: parseNumberSafe(data.techStats?.powerConsumption)
           }
         };
         setResult(cleanData);
@@ -527,7 +542,7 @@ export default function App() {
           <div className="absolute inset-0 bg-slate-50/60 backdrop-blur-[2px] z-50 flex items-center justify-center transition-all">
             <div className="bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center gap-4 border border-slate-100">
               <RefreshCw className="w-8 h-8 text-blue-600 animate-spin" />
-              <p className="text-slate-600 font-medium animate-pulse">Обработка данных...</p>
+              <p className="text-slate-600 font-medium animate-pulse">Сложный экономический расчёт...</p>
             </div>
           </div>
         )}
@@ -592,17 +607,32 @@ export default function App() {
           </div>
 
           <div className="p-3 md:p-8 space-y-4 md:space-y-6">
-            {/* Compact Technical Summary */}
-            <div className="bg-white/80 rounded-xl border-2 border-slate-100 p-3 md:p-4 text-sm md:text-base flex flex-col md:flex-row md:items-center gap-3 md:gap-8 shadow-sm hover:border-slate-200 transition-colors duration-300">
-              <div className="flex items-center gap-2 text-slate-500 font-semibold uppercase tracking-wider text-sm">
-                <Activity size={16} />
-                Параметры заказа
+            <div className="flex flex-col gap-3">
+              {/* Compact Technical Summary */}
+              <div className="bg-white/80 rounded-xl border-2 border-slate-100 p-3 md:p-4 text-sm md:text-base flex flex-col md:flex-row md:items-center gap-3 md:gap-8 shadow-sm hover:border-slate-200 transition-colors duration-300">
+                <div className="flex items-center gap-2 text-slate-500 font-semibold uppercase tracking-wider text-sm md:w-48">
+                  <Activity size={16} />
+                  Параметры заказа
+                </div>
+                <div className="grid grid-cols-2 md:flex md:gap-8 gap-3 flex-1">
+                  <div><span className="text-slate-500">Вес:</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.weight) : '---'} кг</strong></div>
+                  <div><span className="text-slate-500">Длина:</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.length) : '---'} м</strong></div>
+                  <div><span className="text-slate-500">1 м² =</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.m2Weight) : '---'} г</strong></div>
+                  <div><span className="text-slate-500">1 кг =</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.m2PerKg) : '---'} м²</strong></div>
+                </div>
               </div>
-              <div className="grid grid-cols-2 md:flex md:gap-8 gap-3 flex-1">
-                <div><span className="text-slate-500">Вес:</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.weight) : '---'} кг</strong></div>
-                <div><span className="text-slate-500">Длина:</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.length) : '---'} м</strong></div>
-                <div><span className="text-slate-500">1 м² =</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.m2Weight) : '---'} г</strong></div>
-                <div><span className="text-slate-500">1 кг =</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.m2PerKg) : '---'} м²</strong></div>
+
+              {/* Machine Time Summary */}
+              <div className="bg-white/80 rounded-xl border-2 border-slate-100 p-3 md:p-4 text-sm md:text-base flex flex-col md:flex-row md:items-center gap-3 md:gap-8 shadow-sm hover:border-slate-200 transition-colors duration-300">
+                <div className="flex items-center gap-2 text-slate-500 font-semibold uppercase tracking-wider text-sm md:w-48">
+                  <Zap size={16} />
+                  Время работы
+                </div>
+                <div className="grid grid-cols-2 md:flex md:gap-8 gap-3 flex-1">
+                  <div><span className="text-slate-500">С настройкой:</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.totalTimeHours || 0) : '---'} ч</strong></div>
+                  <div><span className="text-slate-500">Настройка:</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.setupTimeHours || 0) : '---'} ч</strong></div>
+                  <div className="col-span-2 md:col-span-1"><span className="text-slate-500">Расход:</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.powerConsumption || 0) : '---'} кВт</strong></div>
+                </div>
               </div>
             </div>
             {/* Commercial Offer (Margin Details) */}
