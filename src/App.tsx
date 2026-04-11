@@ -218,6 +218,7 @@ export default function App() {
   const [result, setResult] = useState<CalculationResult | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isDirty, setIsDirty] = useState(false);
 
   const [isMachineDataOpen, setIsMachineDataOpen] = useState(false);
 
@@ -278,6 +279,7 @@ export default function App() {
   const performCalculation = async (currentInputs: Inputs) => {
     setIsCalculating(true);
     setError(null);
+    setIsDirty(false);
     
     if (!GAS_WEB_APP_URL) {
       // Mock mode
@@ -358,7 +360,7 @@ export default function App() {
 
   const handleInputChange = (key: keyof Inputs, value: any) => {
     setInputs(prev => ({ ...prev, [key]: value }));
-    setResult(null); // Clear results on input change
+    setIsDirty(true);
   };
 
   return (
@@ -372,7 +374,7 @@ export default function App() {
               Калькулятор ПЭТ
             </h1>
           </div>
-          <p className="text-slate-500 text-xs">Расчет производственной себестоимости</p>
+          <p className="text-slate-500 text-sm font-medium">Расчет производственной себестоимости</p>
           {!GAS_WEB_APP_URL && (
             <div className="mt-3 inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-amber-100 text-amber-800 text-xs font-medium border border-amber-200">
               <Activity size={12} />
@@ -390,7 +392,7 @@ export default function App() {
             </h2>
             <div className="space-y-4">
               <div className="flex flex-col space-y-1.5">
-                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Основа ПЭТ (выбрать)</label>
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Основа ПЭТ</label>
                 <div className="relative">
                   <select
                     value={inputs.basePetType}
@@ -509,10 +511,14 @@ export default function App() {
           <button
             onClick={() => performCalculation(inputs)}
             disabled={isCalculating}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+            className={`w-full font-bold py-3 px-4 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] ${
+              isDirty && result
+                ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/20 shadow-lg ring-2 ring-amber-500 ring-offset-2'
+                : 'bg-blue-600 hover:bg-blue-700 text-white'
+            }`}
           >
             {isCalculating ? <RefreshCw className="animate-spin" size={20} /> : <Calculator size={20} />}
-            Обновить расчёт
+            {isDirty && result ? 'Пересчитать' : 'Обновить расчёт'}
           </button>
         </div>
       </aside>
@@ -528,9 +534,22 @@ export default function App() {
           </div>
         )}
 
-        <div className="max-w-[1400px] mx-auto">
+        <div className={`max-w-[1400px] mx-auto transition-all duration-500 ${isDirty && result ? 'opacity-60 saturate-50' : ''}`}>
           {/* Sticky Header */}
           <div className="sticky top-0 z-30 bg-slate-100/95 backdrop-blur-md border-b border-slate-200/60 p-4 md:p-8 pb-6 shadow-sm">
+            {isDirty && result && (
+              <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-md shadow-sm mb-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <Info className="h-5 w-5 text-amber-500" />
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-amber-800 font-medium">Данные изменены. Нажмите «Пересчитать», чтобы обновить результаты.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {error && (
               <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md shadow-sm mb-6">
                 <div className="flex">
@@ -572,16 +591,16 @@ export default function App() {
             </div>
 
             {/* Compact Technical Summary */}
-            <div className="mt-4 bg-white/80 rounded-lg border border-slate-200/80 p-3 text-sm flex flex-col md:flex-row md:items-center gap-3 md:gap-6 shadow-sm">
-              <div className="flex items-center gap-2 text-slate-500 font-semibold uppercase tracking-wider text-xs">
-                <Activity size={14} />
+            <div className="mt-4 bg-white/80 rounded-lg border border-slate-200/80 p-4 text-base flex flex-col md:flex-row md:items-center gap-4 md:gap-8 shadow-sm">
+              <div className="flex items-center gap-2 text-slate-500 font-semibold uppercase tracking-wider text-sm">
+                <Activity size={16} />
                 Параметры заказа
               </div>
-              <div className="grid grid-cols-2 md:flex md:gap-6 gap-2 flex-1">
-                <div><span className="text-slate-500">Вес:</span> <strong className="text-slate-900">{result ? formatNumber(result.techStats.weight) : '---'} кг</strong></div>
-                <div><span className="text-slate-500">Длина:</span> <strong className="text-slate-900">{result ? formatNumber(result.techStats.length) : '---'} м</strong></div>
-                <div><span className="text-slate-500">1 м² =</span> <strong className="text-slate-900">{result ? formatNumber(result.techStats.m2Weight) : '---'} г</strong></div>
-                <div><span className="text-slate-500">1 кг =</span> <strong className="text-slate-900">{result ? formatNumber(result.techStats.m2PerKg) : '---'} м²</strong></div>
+              <div className="grid grid-cols-2 md:flex md:gap-8 gap-3 flex-1">
+                <div><span className="text-slate-500">Вес:</span> <strong className="text-slate-900 text-lg">{result ? formatNumber(result.techStats.weight) : '---'} кг</strong></div>
+                <div><span className="text-slate-500">Длина:</span> <strong className="text-slate-900 text-lg">{result ? formatNumber(result.techStats.length) : '---'} м</strong></div>
+                <div><span className="text-slate-500">1 м² =</span> <strong className="text-slate-900 text-lg">{result ? formatNumber(result.techStats.m2Weight) : '---'} г</strong></div>
+                <div><span className="text-slate-500">1 кг =</span> <strong className="text-slate-900 text-lg">{result ? formatNumber(result.techStats.m2PerKg) : '---'} м²</strong></div>
               </div>
             </div>
           </div>
@@ -666,6 +685,11 @@ export default function App() {
                 </tbody>
               </table>
             </div>
+          </div>
+
+          {/* Footer */}
+          <div className="mt-8 pb-8 text-center text-sm font-medium text-slate-400">
+            &copy; 2026 ИПК Себестоимость ПЭТ. Designed by <span className="text-slate-500">Economist</span>.
           </div>
 
         </div>
