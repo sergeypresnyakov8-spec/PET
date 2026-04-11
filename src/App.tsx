@@ -534,9 +534,9 @@ export default function App() {
 
         <div className={`max-w-[1400px] mx-auto transition-all duration-500 ${isDirty && result ? 'opacity-60 saturate-50' : ''}`}>
           {/* Sticky Header */}
-          <div className="md:sticky md:top-0 md:z-30 bg-slate-100/95 backdrop-blur-md border-b border-slate-200/60 p-4 md:p-8 pb-6 shadow-sm">
+          <div className="sticky top-0 z-30 bg-slate-100/95 backdrop-blur-md border-b border-slate-200/60 p-3 md:p-8 pb-3 md:pb-6 shadow-sm">
             {isDirty && result && (
-              <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-md shadow-sm mb-6">
+              <div className="bg-amber-50 border-l-4 border-amber-500 p-3 md:p-4 rounded-md shadow-sm mb-3 md:mb-6">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <Info className="h-5 w-5 text-amber-500" />
@@ -549,7 +549,7 @@ export default function App() {
             )}
 
             {error && (
-              <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md shadow-sm mb-6">
+              <div className="bg-red-50 border-l-4 border-red-500 p-3 md:p-4 rounded-md shadow-sm mb-3 md:mb-6">
                 <div className="flex">
                   <div className="flex-shrink-0">
                     <Info className="h-5 w-5 text-red-400" />
@@ -562,50 +562,49 @@ export default function App() {
             )}
 
             {/* Top Row: High-impact cards (Planned Cost Only) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-              <div className="bg-white rounded-2xl shadow-sm border-2 border-slate-100 hover:border-blue-200 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative overflow-hidden group">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-6">
+              <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border-2 border-slate-100 hover:border-blue-200 hover:shadow-md transition-all duration-300 p-3 md:p-6 flex flex-col relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-1 h-full bg-blue-500/80"></div>
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 group-hover:opacity-20 transition-all duration-500"><Layers size={64} /></div>
-                <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Себестоимость за 1 м²</h3>
-                <div className="text-3xl font-bold text-slate-900 mt-auto">
+                <div className="absolute top-0 right-0 p-2 md:p-4 opacity-10 group-hover:scale-110 group-hover:opacity-20 transition-all duration-500"><Layers className="w-8 h-8 md:w-16 md:h-16" /></div>
+                <h3 className="text-[10px] md:text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1 md:mb-2">За 1 м²</h3>
+                <div className="text-base md:text-3xl font-bold text-slate-900 mt-auto">
                   {result ? formatCurrency(result.totals.planned.m2) : '---'}
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl shadow-sm border-2 border-slate-100 hover:border-indigo-200 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative overflow-hidden group">
+              <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border-2 border-slate-100 hover:border-indigo-200 hover:shadow-md transition-all duration-300 p-3 md:p-6 flex flex-col relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-1 h-full bg-indigo-500/80"></div>
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 group-hover:opacity-20 transition-all duration-500"><Weight size={64} /></div>
-                <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Себестоимость за 1 кг</h3>
-                <div className="text-3xl font-bold text-slate-900 mt-auto">
+                <div className="absolute top-0 right-0 p-2 md:p-4 opacity-10 group-hover:scale-110 group-hover:opacity-20 transition-all duration-500"><Weight className="w-8 h-8 md:w-16 md:h-16" /></div>
+                <h3 className="text-[10px] md:text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1 md:mb-2">За 1 кг</h3>
+                <div className="text-base md:text-3xl font-bold text-slate-900 mt-auto">
                   {result ? formatCurrency(result.totals.planned.kg) : '---'}
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl shadow-sm border-2 border-slate-100 hover:border-slate-300 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative overflow-hidden group">
+              <div className="col-span-2 md:col-span-1 bg-white rounded-xl md:rounded-2xl shadow-sm border-2 border-slate-100 hover:border-slate-300 hover:shadow-md transition-all duration-300 p-3 md:p-6 flex flex-col relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-1 h-full bg-slate-800/80"></div>
-                <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Плановая себестоимость (Итого)</h3>
-                <div className="text-3xl font-bold text-slate-900 mt-auto">
+                <h3 className="text-xs md:text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1 md:mb-2">Плановая себестоимость (Итого)</h3>
+                <div className="text-xl md:text-3xl font-bold text-slate-900 mt-auto">
                   {result ? formatCurrency(result.totals.planned.order) : '---'}
                 </div>
               </div>
             </div>
+          </div>
 
+          <div className="p-3 md:p-8 space-y-4 md:space-y-6">
             {/* Compact Technical Summary */}
-            <div className="mt-4 bg-white/80 rounded-xl border-2 border-slate-100 p-4 text-sm md:text-base flex flex-col md:flex-row md:items-center gap-4 md:gap-8 shadow-sm hover:border-slate-200 transition-colors duration-300">
+            <div className="bg-white/80 rounded-xl border-2 border-slate-100 p-3 md:p-4 text-sm md:text-base flex flex-col md:flex-row md:items-center gap-3 md:gap-8 shadow-sm hover:border-slate-200 transition-colors duration-300">
               <div className="flex items-center gap-2 text-slate-500 font-semibold uppercase tracking-wider text-sm">
                 <Activity size={16} />
                 Параметры заказа
               </div>
               <div className="grid grid-cols-2 md:flex md:gap-8 gap-3 flex-1">
-                <div><span className="text-slate-500">Вес:</span> <strong className="text-slate-900 text-lg">{result ? formatNumber(result.techStats.weight) : '---'} кг</strong></div>
-                <div><span className="text-slate-500">Длина:</span> <strong className="text-slate-900 text-lg">{result ? formatNumber(result.techStats.length) : '---'} м</strong></div>
-                <div><span className="text-slate-500">1 м² =</span> <strong className="text-slate-900 text-lg">{result ? formatNumber(result.techStats.m2Weight) : '---'} г</strong></div>
-                <div><span className="text-slate-500">1 кг =</span> <strong className="text-slate-900 text-lg">{result ? formatNumber(result.techStats.m2PerKg) : '---'} м²</strong></div>
+                <div><span className="text-slate-500">Вес:</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.weight) : '---'} кг</strong></div>
+                <div><span className="text-slate-500">Длина:</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.length) : '---'} м</strong></div>
+                <div><span className="text-slate-500">1 м² =</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.m2Weight) : '---'} г</strong></div>
+                <div><span className="text-slate-500">1 кг =</span> <strong className="text-slate-900 text-base md:text-lg">{result ? formatNumber(result.techStats.m2PerKg) : '---'} м²</strong></div>
               </div>
             </div>
-          </div>
-
-          <div className="p-4 md:p-8 space-y-6">
             {/* Commercial Offer (Margin Details) */}
             <div className="bg-emerald-50 rounded-2xl shadow-sm border-2 border-emerald-200 overflow-hidden hover:border-emerald-300 hover:shadow-md transition-all duration-300">
               <div className="px-6 py-4 border-b border-emerald-200 bg-emerald-100/50 flex justify-between items-center">
