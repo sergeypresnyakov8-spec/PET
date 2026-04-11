@@ -366,7 +366,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans text-slate-900">
       {/* Sidebar / Input Panel */}
-      <aside className="w-full md:w-[380px] lg:w-[420px] xl:w-[460px] bg-white border-r-2 border-slate-100 flex flex-col h-screen sticky top-0 overflow-y-auto shadow-sm z-10">
+      <aside className="w-full md:w-[380px] lg:w-[420px] xl:w-[460px] bg-white border-b-2 md:border-b-0 md:border-r-2 border-slate-100 flex flex-col md:h-screen md:sticky md:top-0 md:overflow-y-auto shadow-sm z-20">
         <div className="p-6 border-b border-slate-200 bg-white text-slate-900">
           <div className="flex items-center gap-3 mb-2">
             <img src="./logo.png" alt="Логотип" className="h-16 w-auto object-contain" />
@@ -505,7 +505,7 @@ export default function App() {
         </div>
         
         {/* Calculate Button */}
-        <div className="p-6 border-t border-slate-200 bg-white sticky bottom-0 z-10 shadow-[0_-4px_12px_rgba(0,0,0,0.02)]">
+        <div className="p-4 md:p-6 border-t border-slate-200 bg-white sticky bottom-0 z-30 shadow-[0_-4px_15px_rgba(0,0,0,0.05)]">
           <button
             onClick={() => performCalculation(inputs)}
             disabled={isCalculating}
@@ -522,7 +522,7 @@ export default function App() {
       </aside>
 
       {/* Main Content / Dashboard */}
-      <main className="flex-1 overflow-y-auto h-screen relative bg-slate-100/50">
+      <main className="flex-1 md:overflow-y-auto md:h-screen relative bg-slate-100/50">
         {isCalculating && (
           <div className="absolute inset-0 bg-slate-50/60 backdrop-blur-[2px] z-50 flex items-center justify-center transition-all">
             <div className="bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center gap-4 border border-slate-100">
@@ -534,7 +534,7 @@ export default function App() {
 
         <div className={`max-w-[1400px] mx-auto transition-all duration-500 ${isDirty && result ? 'opacity-60 saturate-50' : ''}`}>
           {/* Sticky Header */}
-          <div className="sticky top-0 z-30 bg-slate-100/95 backdrop-blur-md border-b border-slate-200/60 p-4 md:p-8 pb-6 shadow-sm">
+          <div className="md:sticky md:top-0 md:z-30 bg-slate-100/95 backdrop-blur-md border-b border-slate-200/60 p-4 md:p-8 pb-6 shadow-sm">
             {isDirty && result && (
               <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-md shadow-sm mb-6">
                 <div className="flex items-center">
@@ -591,7 +591,7 @@ export default function App() {
             </div>
 
             {/* Compact Technical Summary */}
-            <div className="mt-4 bg-white/80 rounded-xl border-2 border-slate-100 p-4 text-base flex flex-col md:flex-row md:items-center gap-4 md:gap-8 shadow-sm hover:border-slate-200 transition-colors duration-300">
+            <div className="mt-4 bg-white/80 rounded-xl border-2 border-slate-100 p-4 text-sm md:text-base flex flex-col md:flex-row md:items-center gap-4 md:gap-8 shadow-sm hover:border-slate-200 transition-colors duration-300">
               <div className="flex items-center gap-2 text-slate-500 font-semibold uppercase tracking-wider text-sm">
                 <Activity size={16} />
                 Параметры заказа
