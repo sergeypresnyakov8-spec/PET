@@ -145,7 +145,7 @@ const InputGroup = ({ label, value, onChange, suffix, icon: Icon }: any) => {
             setLocalValue(value === 0 ? '' : value.toString());
           }}
           onBlur={() => setIsFocused(false)}
-          className={`w-full bg-white border border-slate-200 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-2 transition-all ${Icon ? 'pl-9' : 'pl-3'} ${suffix ? 'pr-12' : 'pr-3'}`}
+          className={`w-full bg-white border-2 border-slate-200 rounded-lg shadow-sm hover:border-slate-300 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 sm:text-sm py-2 transition-all duration-200 ${Icon ? 'pl-9' : 'pl-3'} ${suffix ? 'pr-12' : 'pr-3'}`}
         />
         {suffix && <span className="absolute right-3 text-slate-400 text-sm font-medium">{suffix}</span>}
       </div>
@@ -155,7 +155,7 @@ const InputGroup = ({ label, value, onChange, suffix, icon: Icon }: any) => {
 
 const SliderGroup = ({ label, value, onChange, min, max, step, suffix, icon: Icon }: any) => {
   return (
-    <div className="flex flex-col space-y-2 bg-slate-50 p-3 rounded-lg border border-slate-100">
+    <div className="flex flex-col space-y-2 bg-slate-50 p-3 rounded-xl border-2 border-slate-100 hover:border-slate-200 transition-colors duration-200">
       <div className="flex justify-between items-center">
         <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
           {Icon && <Icon size={14} className="text-blue-500" />}
@@ -366,7 +366,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans text-slate-900">
       {/* Sidebar / Input Panel */}
-      <aside className="w-full md:w-[380px] lg:w-[420px] xl:w-[460px] bg-white border-r border-slate-200 flex flex-col h-screen sticky top-0 overflow-y-auto shadow-sm z-10">
+      <aside className="w-full md:w-[380px] lg:w-[420px] xl:w-[460px] bg-white border-r-2 border-slate-100 flex flex-col h-screen sticky top-0 overflow-y-auto shadow-sm z-10">
         <div className="p-6 border-b border-slate-200 bg-white text-slate-900">
           <div className="flex items-center gap-3 mb-2">
             <img src="./logo.png" alt="Логотип" className="h-16 w-auto object-contain" />
@@ -397,7 +397,7 @@ export default function App() {
                   <select
                     value={inputs.basePetType}
                     onChange={e => handleInputChange('basePetType', e.target.value)}
-                    className="w-full bg-white border border-slate-200 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-2 pl-3 pr-10 appearance-none"
+                    className="w-full bg-white border-2 border-slate-200 rounded-lg shadow-sm hover:border-slate-300 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 sm:text-sm py-2 pl-3 pr-10 appearance-none transition-all duration-200"
                   >
                     {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                   </select>
@@ -427,7 +427,7 @@ export default function App() {
                     <select
                       value={inputs.baseThickness}
                       onChange={e => handleInputChange('baseThickness', Number(e.target.value))}
-                      className="w-full bg-white border border-slate-200 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-2 pl-3 pr-10 appearance-none"
+                      className="w-full bg-white border-2 border-slate-200 rounded-lg shadow-sm hover:border-slate-300 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 sm:text-sm py-2 pl-3 pr-10 appearance-none transition-all duration-200"
                     >
                       {thicknessOptions.map(opt => <option key={opt} value={opt}>{opt} мкм</option>)}
                     </select>
@@ -440,7 +440,7 @@ export default function App() {
                     <select
                       value={inputs.numberOfPasses}
                       onChange={e => handleInputChange('numberOfPasses', Number(e.target.value))}
-                      className="w-full bg-white border border-slate-200 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-2 pl-9 pr-10 appearance-none"
+                      className="w-full bg-white border-2 border-slate-200 rounded-lg shadow-sm hover:border-slate-300 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 sm:text-sm py-2 pl-9 pr-10 appearance-none transition-all duration-200"
                     >
                       <option value={1}>АА-1</option>
                       <option value={2}>АА-2</option>
@@ -563,23 +563,26 @@ export default function App() {
 
             {/* Top Row: High-impact cards (Planned Cost Only) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-4 opacity-10"><Layers size={64} /></div>
+              <div className="bg-white rounded-2xl shadow-sm border-2 border-slate-100 hover:border-blue-200 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-1 h-full bg-blue-500/80"></div>
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 group-hover:opacity-20 transition-all duration-500"><Layers size={64} /></div>
                 <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Себестоимость за 1 м²</h3>
                 <div className="text-3xl font-bold text-slate-900 mt-auto">
                   {result ? formatCurrency(result.totals.planned.m2) : '---'}
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-4 opacity-10"><Weight size={64} /></div>
+              <div className="bg-white rounded-2xl shadow-sm border-2 border-slate-100 hover:border-indigo-200 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-1 h-full bg-indigo-500/80"></div>
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 group-hover:opacity-20 transition-all duration-500"><Weight size={64} /></div>
                 <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Себестоимость за 1 кг</h3>
                 <div className="text-3xl font-bold text-slate-900 mt-auto">
                   {result ? formatCurrency(result.totals.planned.kg) : '---'}
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col relative overflow-hidden">
+              <div className="bg-white rounded-2xl shadow-sm border-2 border-slate-100 hover:border-slate-300 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-1 h-full bg-slate-800/80"></div>
                 <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Плановая себестоимость (Итого)</h3>
                 <div className="text-3xl font-bold text-slate-900 mt-auto">
                   {result ? formatCurrency(result.totals.planned.order) : '---'}
@@ -588,7 +591,7 @@ export default function App() {
             </div>
 
             {/* Compact Technical Summary */}
-            <div className="mt-4 bg-white/80 rounded-lg border border-slate-200/80 p-4 text-base flex flex-col md:flex-row md:items-center gap-4 md:gap-8 shadow-sm">
+            <div className="mt-4 bg-white/80 rounded-xl border-2 border-slate-100 p-4 text-base flex flex-col md:flex-row md:items-center gap-4 md:gap-8 shadow-sm hover:border-slate-200 transition-colors duration-300">
               <div className="flex items-center gap-2 text-slate-500 font-semibold uppercase tracking-wider text-sm">
                 <Activity size={16} />
                 Параметры заказа
@@ -604,7 +607,7 @@ export default function App() {
 
           <div className="p-4 md:p-8 space-y-6">
             {/* Commercial Offer (Margin Details) */}
-            <div className="bg-emerald-50 rounded-xl shadow-sm border border-emerald-200 overflow-hidden">
+            <div className="bg-emerald-50 rounded-2xl shadow-sm border-2 border-emerald-200 overflow-hidden hover:border-emerald-300 hover:shadow-md transition-all duration-300">
               <div className="px-6 py-4 border-b border-emerald-200 bg-emerald-100/50 flex justify-between items-center">
                 <h3 className="text-lg font-bold text-emerald-900 flex items-center gap-2">
                   Коммерческое предложение (с учетом маржи {inputs.marginPct}%)
@@ -630,7 +633,7 @@ export default function App() {
             </div>
 
             {/* Middle Section: Cost Breakdown Table */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-sm border-2 border-slate-100 overflow-hidden hover:border-slate-200 transition-all duration-300">
             <div className="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
               <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
                 <FileSpreadsheet className="text-slate-400" size={20} />
